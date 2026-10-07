@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXT-GEN4INDUSTRY | Industry 4.0 Solutions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="logo">NEXT-GEN<span>4INDUSTRY</span></div>
+        <nav>
+            <a href="#home" class="active">Home</a>
+            <a href="#services">Services</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a> <!-- Added link to jump directly to form -->
+        </nav>
+    </header>
+
+    <!-- Hero Showcase Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <h1>Engineering the Future of Manufacturing</h1>
+            <p>Innovative leaders in digital automation and Industry 4.0 solutions. We build the smart, connected, and highly efficient technological foundations for tomorrow’s factories.</p>
+            <a href="#services" class="cta-btn">Explore Our Solutions</a>
+        </div>
+    </section>
+
+    <!-- Specialized Core Services Grid Section -->
+    <section id="services" class="services-section">
+        <h2>Our Core Expertise</h2>
+        <p class="section-subtitle">Delivering next-generation digital solutions designed to accelerate industrial transformation.</p>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Smart Factory Integration</h3>
+                <p>Unifying hardware and software platforms seamlessly to establish cohesive factory ecosystems.</p>
+            </div>
+            <div class="service-card">
+                <h3>IoT Connectivity</h3>
+                <p>Linking machines, sensors, and legacy assets to secure absolute real-time visibility across operations.</p>
+            </div>
+            <div class="service-card">
+                <h3>Predictive Data Analytics</h3>
+                <p>Anticipating precision maintenance needs and eliminating operational bottlenecks before they happen.</p>
+            </div>
+            <div class="service-card">
+                <h3>Cloud-Driven Automation</h3>
+                <p>Scaling complex industrial operations securely and dynamically through cloud infrastructure.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Philosophy Section -->
+    <section id="about" class="about-section">
+        <div class="about-container">
+            <h2>Turning Data into Intelligence</h2>
+            <p>By converting raw industrial data into actionable intelligence, we empower modern organizations to dramatically optimize supply chains, enhance localized production quality, and unlock completely new tiers of manufacturing agility.</p>
+        </div>
+    </section>
+
+    <!-- Contact Inquiry Section -->
+    <section id="contact" class="contact-section">
+        <div class="contact-container">
+            <h2>Connect With Our Automation Engineers</h2>
+            <p class="section-subtitle">Let's discuss how to accelerate your industrial digital transformation.</p>
+
+            <!-- Display Flask flash message banner when form is submitted successfully -->
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="success-banner">{{ message }}</div>
+                {% endfor %} <!-- Removed the stray vertical bar typo here -->
+              {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('submit_inquiry') }}" method="POST" class="inquiry-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="e.g. John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="email">Business Email</label>
+                    <input type="email" id="email" name="email" required placeholder="name@company.com">
+                </div>
+                <div class="form-group">
+                    <label for="company">Company Name</label>
+                    <input type="text" id="company" name="company" required placeholder="Next-Gen Manufacturing Ltd.">
+                </div>
+                <div class="form-group">
+                    <label for="message">Project Requirements / Inquiry</label>
+                    <textarea id="message" name="message" rows="5" required placeholder="Describe your automation goals, scale, or timeline..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Submit Inquiry</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2026 NEXT-GEN4INDUSTRY. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
