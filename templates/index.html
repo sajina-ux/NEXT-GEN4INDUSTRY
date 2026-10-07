@@ -68,7 +68,9 @@
             <p class="section-subtitle">Let's discuss how to accelerate your industrial digital transformation.</p>
 
             <!-- FIXED ACTION URL PIPELINE PATH -->
-            <form action="https://formspree.io/f/xyekkdjg" method="POST" class="inquiry-form">
+                      <!-- Form points natively back to your Flask submit route -->
+            <form action="/submit-inquiry" method="POST" class="inquiry-form">
+
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" required placeholder="e.g. John Doe">
