@@ -15,7 +15,7 @@
             <a href="#home" class="active">Home</a>
             <a href="#services">Services</a>
             <a href="#about">About</a>
-            <a href="#contact">Contact</a> <!-- Added link to jump directly to form -->
+            <a href="#contact">Contact</a>
         </nav>
     </header>
 
@@ -67,17 +67,8 @@
             <h2>Connect With Our Automation Engineers</h2>
             <p class="section-subtitle">Let's discuss how to accelerate your industrial digital transformation.</p>
 
-            <!-- Display Flask flash message banner when form is submitted successfully -->
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                  <div class="success-banner">{{ message }}</div>
-                {% endfor %} <!-- Removed the stray vertical bar typo here -->
-              {% endif %}
-            {% endwith %}
-
+            <!-- REMINDER: Replace YOUR_FORMSPREE_ID with your real Formspree token -->
             <form action="https://formspree.io" method="POST" class="inquiry-form">
-
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" required placeholder="e.g. John Doe">
