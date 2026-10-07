@@ -1,44 +1,48 @@
-import csv
 import os
-from flask import Flask, flash, redirect, render_template, request, url_for
+import csv
+from flask import Flask, render_template, request, redirect, url_for, flash
 
 app = Flask(__name__)
-# A secret key is required by Flask to handle success messages safely
 app.secret_key = "next_gen_automation_secret_key"
 
-CSV_FILE_PATH = "leads.csv"
+# This forces the CSV to be saved in your exact website folder path
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+CSV_FILE_PATH = os.path.join(BASE_DIR, "leads.csv")
 
-
-# Route for the main landing page
 @app.route("/")
 def home():
     return render_template("index.html")
 
-
-# Route to handle form submissions
 @app.route("/submit-inquiry", methods=["POST"])
 def submit_inquiry():
-    # 1. Capture form fields from the incoming request
-    client_name = request.form.get("name")
-    client_email = request.form.get("email")
-    company_name = request.form.get("company")
-    client_message = request.form.get("message")
+    # 1. Safely extract values from the form inputs
+    name = request.form.get("name", "").strip()
+    email = request.form.get("email", "").strip()
+    company = request.form.get("company", "").strip()
+    message = request.form.get("message", "").strip()
 
-    # 2. Check if the CSV file exists; if not, create it and write headers
-    file_exists = os.path.isfile(CSV_FILE_PATH)
+    # 2. Check if the CSV exists to know if we need header rows
+    file_exists = os.path.exists(CSV_FILE_PATH)
 
-    with open(CSV_FILE_PATH, mode="a", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-        if not file_exists:
-            writer.writerow(["Name", "Email", "Company", "Message"])  # Headers
+    try:
+        # 3. Open the target spreadsheet in append mode
+        with open(CSV_FILE_PATH, mode="a", newline="", encoding="utf-8") as csv_file:
+            writer = csv.writer(csv_file)
+            
+            if not file_exists:
+                # Write standard tracker headers if it is a brand new file
+                writer.writerow(["Name", "Email", "Company", "Message"])
+            
+            # Write out your data entry fields row
+            writer.writerow([name, email, company, message])
+            
+        flash("Thank you! Your automation inquiry has been safely received.")
+    except Exception as e:
+        # If a file layout block occurs, log it directly to your terminal
+        print(f"Database error writing to CSV file: {e}")
+        flash("An error occurred while handling your transmission.")
 
-        # 3. Append the client inquiry row
-        writer.writerow([client_name, client_email, company_name, client_message])
-
-    # 4. Display a friendly confirmation banner on the page
-    flash("Thank you! Your automation inquiry has been safely received.")
-    return redirect(url_for("home") + "#contact")
-
+    return redirect(url_for('home') + "#contact")
 
 if __name__ == "__main__":
     app.run(debug=True)
