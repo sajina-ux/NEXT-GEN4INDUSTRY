@@ -18,54 +18,66 @@
     
     <!-- Central Control Container Workspace Layout -->
     <main style="padding: 40px 8%; max-width: 1200px; margin: 0 auto;">
-        <div style="background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 40px;">
-            <h1 style="color: #1a365d; margin-bottom: 10px;">Central Energy AI Portfolio & MLOps Governance Workspace</h1>
-            <p style="color: #718096; max-width: 900px; margin-bottom: 0; font-size: 1.05rem;">
-                Standardizing deployment frameworks, agile methodologies, and scalable MLOps (Machine Learning Operations) practices to ensure reliable and highly secure deployment of AI models within heavy engineering and plant environments.
+        
+        <!-- Header Banner Container -->
+        <div style="background: #ffffff; padding: 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 40px; border-top: 4px solid #1a365d;">
+            <h1 style="color: #1a365d; margin-bottom: 15px; font-size: 2.2rem; font-weight: 700; letter-spacing: -0.5px;">Central Energy AI Portfolio & MLOps Governance</h1>
+            <p style="color: #4a5568; max-width: 1000px; margin-bottom: 0; font-size: 1.1rem; line-height: 1.7;">
+                Standardizing development frameworks, agile methodologies, and scalable MLOps (Machine Learning Operations) practices to ensure reliable and highly secure deployment of AI models within heavy engineering and plant environments.
             </p>
         </div>
 
-        <!-- Portfolio Framework Segment -->
-        <h2 style="color: #1a365d; margin-bottom: 20px;">Active AI Portfolio Registry</h2>
-        <table style="width: 100%; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-radius: 8px; overflow: hidden; margin-bottom: 40px;">
-            <thead>
-                <tr style="background-color: #1a365d; color: white; text-align: left;">
-                    <th style="padding: 12px;">Model Initiative</th>
-                    <th style="padding: 12px;">Deployment Status</th>
-                    <th style="padding: 12px;">SCADA / IoT Dependencies</th>
-                    <th style="padding: 12px;">Risk Index</th>
-                    <th style="padding: 12px;">Operational Business Value</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for model in portfolio %}
-                <tr>
-                    <td style="padding: 12px; border-bottom: 1px solid #cbd5e0; font-weight: 600;">{{ model.name }}</td>
-                    <td style="padding: 12px; border-bottom: 1px solid #cbd5e0;">
-                        <span style="background: #e2e8f0; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">{{ model.status }}</span>
-                    </td>
-                    <td style="padding: 12px; border-bottom: 1px solid #cbd5e0; font-family: monospace; font-size: 0.9rem;">{{ model.dependencies }}</td>
-                    <td style="padding: 12px; border-bottom: 1px solid #cbd5e0; font-weight: bold; color: {% if model.risk == 'High' %}#e53e3e{% elif model.risk == 'Medium' %}#dd6b20{% else %}#38a169{% endif %};">
-                        {{ model.risk }}
-                    </td>
-                    <td style="padding: 12px; border-bottom: 1px solid #cbd5e0; color: #4a5568;">{{ model.impact }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <!-- Portfolio Registry Table Block -->
+        <h2 style="color: #1a365d; margin-bottom: 20px; font-size: 1.6rem; font-weight: 700;">Active AI Portfolio Registry</h2>
+        <div style="overflow-x: auto; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-radius: 8px; margin-bottom: 40px; border: 1px solid #e2e8f0;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 800px; text-align: left;">
+                <thead>
+                    <tr style="background-color: #1a365d; color: white;">
+                        <th style="padding: 14px 16px; font-weight: 600; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">Model Initiative</th>
+                        <th style="padding: 14px 16px; font-weight: 600; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">Deployment Status</th>
+                        <th style="padding: 14px 16px; font-weight: 600; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">SCADA / IoT Dependencies</th>
+                        <th style="padding: 14px 16px; font-weight: 600; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">Risk Index</th>
+                        <th style="padding: 14px 16px; font-weight: 600; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">Operational Business Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for model in portfolio %}
+                    <tr style="border-bottom: 1px solid #e2e8f0; transition: background 0.2s ease;" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">
+                        <td style="padding: 16px; font-weight: 600; color: #2d3748; font-size: 1rem;">{{ model.name }}</td>
+                        <td style="padding: 16px;">
+                            <span style="background: {% if model.status == 'Production' %}#c6f6d5; color: #22543d;{% elif model.status == 'Staging' %}#feebc8; color: #744210;{% else %}#e2e8f0; color: #4a5568;{% endif %} padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">
+                                {{ model.status }}
+                            </span>
+                        </td>
+                        <td style="padding: 16px; font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; color: #4a5568; font-weight: 600;">{{ model.dependencies }}</td>
+                        <td style="padding: 16px; font-weight: 700; font-size: 0.95rem; color: {% if model.risk == 'High' %}#e53e3e{% elif model.risk == 'Medium' %}#dd6b20{% else %}#38a169{% endif %};">
+                            {{ model.risk }}
+                        </td>
+                        <td style="padding: 16px; font-weight: 600; color: #2d3748; font-size: 0.95rem;">{{ model.impact }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-        <!-- MLOps Governance Core Guidelines Block -->
-        <h2 style="color: #1a365d; margin-bottom: 20px;">MLOps Infrastructure Standards</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
-            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 4px solid #3182ce; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
-                <h3 style="color: #2d3748; margin-bottom: 10px;">Data Drift Protection</h3>
-                <p style="color: #4a5568; font-size: 0.95rem; margin: 0;">Continuous out-of-bounds sensory tracking guarding production grid assets against data degradation and physical hardware drift errors.</p>
+        <!-- MLOps Infrastructure Standards Cards Grid Layout -->
+        <h2 style="color: #1a365d; margin-bottom: 20px; font-size: 1.6rem; font-weight: 700;">MLOps Infrastructure Standards</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px;">
+            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #3182ce; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; border-left-width: 5px;">
+                <h3 style="color: #2d3748; margin-bottom: 12px; font-size: 1.3rem; font-weight: 700;">Data Drift Protection</h3>
+                <p style="color: #4a5568; font-size: 1rem; line-height: 1.6; margin: 0;">Continuous out-of-bounds sensory tracking guarding production grid assets against data degradation and physical hardware drift errors.</p>
             </div>
-            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 4px solid #3182ce; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
-                <h3 style="color: #2d3748; margin-bottom: 10px;">Plant Safety Containment</h3>
-                <p style="color: #4a5568; font-size: 0.95rem; margin: 0;">Rigorous sandbox boundaries enforcing isolated testing spaces prior to injecting automated control hooks directly into live physical systems.</p>
+            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #3182ce; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; border-left-width: 5px;">
+                <h3 style="color: #2d3748; margin-bottom: 12px; font-size: 1.3rem; font-weight: 700;">Plant Safety Containment</h3>
+                <p style="color: #4a5568; font-size: 1rem; line-height: 1.6; margin: 0;">Rigorous sandbox boundaries enforcing isolated testing spaces prior to injecting automated control hooks directly into live physical systems.</p>
             </div>
         </div>
     </main>
+
+    <!-- Footer Panel Section -->
+    <footer style="margin-top: 80px;">
+        <p>&copy; 2026 NEXT-GEN4INDUSTRY. All rights reserved.</p>
+    </footer>
+
 </body>
 </html>
