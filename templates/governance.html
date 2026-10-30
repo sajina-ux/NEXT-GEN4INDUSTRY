@@ -6,7 +6,7 @@
     <title>NEXT-GEN4INDUSTRY | Energy AI & MLOps Governance Workspace</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body style="background-color: #f4f7f6; padding: 0; margin: 0;">
+<body style="background-color: #f4f7f6; padding: 0; margin: 0; font-family: sans-serif;">
 
     <!-- Navigation Header Panel -->
     <header class="navbar">
@@ -30,7 +30,7 @@
         <!-- Portfolio Registry Table Block -->
         <h2 style="color: #1a365d; margin-bottom: 20px; font-size: 1.6rem; font-weight: 700;">Active AI Portfolio Registry</h2>
         <div style="overflow-x: auto; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-radius: 8px; margin-bottom: 40px; border: 1px solid #e2e8f0;">
-            <table style="width: 100%; border-collapse: collapse; min-width: 800px; text-align: left;">
+            <table id="portfolioTable" style="width: 100%; border-collapse: collapse; min-width: 800px; text-align: left;">
                 <thead>
                     <tr style="background-color: #1a365d; color: white;">
                         <th style="padding: 14px 16px; font-weight: 600; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">Model Initiative</th>
@@ -60,53 +60,124 @@
             </table>
         </div>
 
-        <!-- ===================================================================== -->
-        <!-- INTEGRATED STREAMLIT GOVERNANCE ENGINE EMBED (FROM C:\...\sd FOLDER) -->
-        <!-- ===================================================================== -->
-        <div style="margin-bottom: 40px;">
+        <!-- NEW NATIVE INTERACTIVE SECTION (REPLACES THE IFRAME) -->
+        <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 40px; border: 1px solid #e2e8f0;">
             <h2 style="color: #1a365d; margin-bottom: 10px; font-size: 1.6rem; font-weight: 700;">⚙️ Centralized Operational Infrastructure & Local RAG Core</h2>
-            <p style="color: #4a5568; margin-bottom: 20px; font-size: 1rem; line-height: 1.6;">
+            <p style="color: #4a5568; margin-bottom: 25px; font-size: 1rem; line-height: 1.6;">
                 Access the real-time intake engine, evaluate active cross-functional plant constraints, audit secure edge MLOps compliance parameters, and run natural language search queries against internal engineering safety references.
             </p>
-            <div style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.03); overflow: hidden;">
-                <!-- Replace the src URL below with your actual deployed Streamlit Web Service URL on Render -->
-                <iframe 
-                    src="https://next-gen4industry.onrender.com/governance" 
-                    width="100%" 
-                    height="1000px" 
-                    style="border: none; display: block;"
-                    allowfullscreen>
-                </iframe>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <!-- Intake Form Container -->
+                <div style="background: #f8fafc; padding: 20px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                    <h3 style="color: #1a365d; margin-top: 0; font-size: 1.2rem; margin-bottom: 15px;">📥 Strategic Use Case Intake Form</h3>
+                    <form id="intakeForm" onsubmit="addInitiative(event)">
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem; color:#4a5568;">Initiative Name:</label>
+                        <input type="text" id="pName" required style="width:100%; padding:8px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:4px; box-sizing:border-box;">
+                        
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem; color:#4a5568;">Deployment Status:</label>
+                        <select id="pStatus" style="width:100%; padding:8px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:4px;">
+                            <option value="Production">Production</option>
+                            <option value="Staging">Staging</option>
+                            <option value="In Development">In Development</option>
+                        </select>
+                        
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem; color:#4a5568;">SCADA/IoT Dependencies:</label>
+                        <input type="text" id="pDeps" required style="width:100%; padding:8px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:4px; box-sizing:border-box;">
+                        
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem; color:#4a5568;">Risk Index:</label>
+                        <select id="pRisk" style="width:100%; padding:8px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:4px;">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                        
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem; color:#4a5568;">Operational Value Metric:</label>
+                        <input type="text" id="pImpact" required style="width:100%; padding:8px; margin-bottom:15px; border:1px solid #cbd5e1; border-radius:4px; box-sizing:border-box;">
+                        
+                        <button type="submit" style="background:#1a365d; color:white; border:none; padding:10px 16px; border-radius:4px; font-weight:600; cursor:pointer; width:100%;">Ingest into Registry</button>
+                    </form>
+                </div>
+
+                <!-- Grounded RAG Search Container -->
+                <div style="background: #f8fafc; padding: 20px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                    <h3 style="color: #1a365d; margin-top: 0; font-size: 1.2rem; margin-bottom: 15px;">🔍 Engineering RAG Core Search</h3>
+                    <p style="font-size:0.88rem; color:#64748b; margin-top:0;">Query localized technical references regarding plant parameters and industrial compliance guidelines.</p>
+                    
+                    <input type="text" id="ragQuery" placeholder="e.g., 'Dissolved Gas Analysis' or 'Safety Containment'" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:4px; margin-bottom:12px; box-sizing:border-box;">
+                    <button onclick="runRAGSearch()" style="background:#3182ce; color:white; border:none; padding:10px 16px; border-radius:4px; font-weight:600; cursor:pointer; width:100%;">Execute Semantic Query</button>
+                    
+                    <div id="ragResult" style="margin-top:15px; padding:12px; background:white; border:1px dashed #cbd5e1; border-radius:4px; min-height:80px; font-size:0.95rem; color:#334155;">
+                        <span style="color:#94a3b8;">Output generation responses will render here...</span>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- ===================================================================== -->
 
         <!-- MLOps Infrastructure Standards Cards Grid Layout -->
         <h2 style="color: #1a365d; margin-bottom: 20px; font-size: 1.6rem; font-weight: 700;">MLOps Infrastructure Standards</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px;">
-            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #3182ce; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; border-left-width: 5px;">
-                <h3 style="color: #2d3748; margin-bottom: 12px; font-size: 1.3rem; font-weight: 700;">Data Drift Protection</h3>
-                <p style="color: #4a5568; font-size: 1rem; line-height: 1.6; margin: 0;">Continuous out-of-bounds sensory tracking guarding production grid assets against data degradation and physical hardware drift errors.</p>
-            </div>
-            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #3182ce; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; border-left-width: 5px;">
-                <h3 style="color: #2d3748; margin-bottom: 12px; font-size: 1.3rem; font-weight: 700;">Plant Safety Containment</h3>
-                <p style="color: #4a5568; font-size: 1rem; line-height: 1.6; margin: 0;">Rigorous sandbox boundaries enforcing isolated testing spaces prior to injecting automated control hooks directly into live physical systems.</p>
-            </div>
-        </div>
-    </main>
+Data Drift Protection
+Continuous out-of-bounds sensory tracking guarding production grid assets against data degradation and physical hardware drift errors.
 
-    <!-- Footer Panel Section -->
-    <footer style="margin-top: 80px;">
-        <p>&copy; 2026 NEXT-GEN4INDUSTRY. All rights reserved.</p>
-    </footer>
-<!-- CORRECTED LINE -->
-<iframe 
-    src="https://your-energy-ai-app.onrender.com" 
-    width="100%" 
-    height="1000px" 
-    style="border: none; display: block;"
-    allowfullscreen>
-</iframe>
 
-</body>
-</html>
+Plant Safety Containment
+Rigorous sandbox boundaries enforcing isolated testing spaces prior to injecting automated control hooks directly into live physical systems.
+
+
+© 2026 NEXT-GEN4INDUSTRY. All rights reserved.
+// Localized document store simulating our RAG knowledge database architecture
+const knowledgeBase = [
+{ topic: "Dissolved Gas Analysis (DGA)", content: "Dissolved Gas Analysis (DGA) tests transformer oil properties to isolate thermal and electrical fault signatures before unforced failure cascades occur." },
+{ topic: "Data Drift Protection", content: "Data Drift monitoring blocks sensory model drift during high-load grid spikes by continuous out-of-bounds validation checks." },
+{ topic: "Plant Safety Containment", content: "Enforces strict isolated sandbox boundaries to prevent unauthorized automation hooks from directly altering active substation infrastructure." }
+];
+// Intake Registry Handler
+function addInitiative(event) {
+event.preventDefault();
+const name = document.getElementById("pName").value;
+const status = document.getElementById("pStatus").value;
+const deps = document.getElementById("pDeps").value;
+const risk = document.getElementById("pRisk").value;
+const impact = document.getElementById("pImpact").value;
+const tableBody = document.getElementById("portfolioTable").getElementsByTagName("tbody")[0];
+const newRow = tableBody.insertRow();
+// Apply corresponding style templates matching our server layout
+let statusBg = status === "Production" ? "#c6f6d5; color: #22543d;" : status === "Staging" ? "#feebc8; color: #744210;" : "#e2e8f0; color: #4a5568;";
+let riskColor = risk === "High" ? "#e53e3e" : risk === "Medium" ? "#dd6b20" : "#38a169";
+newRow.style.borderBottom = "1px solid #e2e8f0";
+newRow.innerHTML = `
+${name}
+${status}
+${deps}
+${risk}
+${impact}
+`;
+document.getElementById("intakeForm").reset();
+}
+// On-Device RAG Token Matcher Engine
+function runRAGSearch() {
+const query = document.getElementById("ragQuery").value.toLowerCase();
+const resultBox = document.getElementById("ragResult");
+if (!query.trim()) {
+resultBox.innerHTML = "⚠️ Please enter a validation query.";
+return;
+}
+let bestMatch = null;
+let highestScore = 0;
+knowledgeBase.forEach(doc => {
+let score = 0;
+const searchableText = (doc.topic + " " + doc.content).toLowerCase();
+query.split(" ").forEach(word => {
+if (word.length > 2 && searchableText.includes(word)) score++;
+});
+if (score > highestScore) {
+highestScore = score;
+bestMatch = doc;
+}
+});
+if (bestMatch) {
+resultBox.innerHTML = <strong style="color:#1a365d;">🎯 Grounded Document: ${bestMatch.topic}</strong><br> <p style="margin: 5px 0 0 0; line-height:1.5; color:#334155;"><strong>Analysis output:</strong> ${bestMatch.content}</p>;
+} else {
+resultBox.innerHTML = "📋 No engineering standard matched your query. Showing generic context fallback framework.";
+}
+}
