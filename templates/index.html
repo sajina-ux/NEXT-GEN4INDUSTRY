@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEXT-GEN4INDUSTRY | Industry 4.0 Solutions</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Embedded SMR Application Custom Styling */
+        .smr-section { padding: 60px 20px; background: #1a1a22; text-align: center; }
+        .smr-container { max-width: 900px; margin: 0 auto; background: #2a2a35; padding: 40px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: left; }
+        .smr-container h2 { color: #00d2ff; margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid #3a3a4a; padding-bottom: 10px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
+        .smr-group { display: flex; flex-direction: column; }
+        .smr-group label { margin-bottom: 8px; color: #aaa; font-weight: 600; font-size: 14px; }
+        .smr-group input, .smr-group select { padding: 12px; background: #1e1e24; border: 1px solid #4a4a5a; border-radius: 4px; color: #fff; font-size: 15px; box-sizing: border-box; }
+        .smr-btn { background: #00d2ff; color: #1e1e24; border: none; padding: 14px 20px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s, transform 0.1s; }
+        .smr-btn:hover { background: #00b4db; }
+        .smr-btn:active { transform: scale(0.99); }
+        .smr-results { margin-top: 35px; background: #1e1e24; padding: 25px; border-radius: 6px; border-left: 5px solid #00d2ff; display: none; }
+        .smr-results h3 { color: #00d2ff; margin-top: 0; }
+        .matrix-item { margin-bottom: 10px; padding-left: 12px; border-left: 3px solid #4a4a5a; font-size: 15px; }
+        .smr-results ul { padding-left: 20px; margin-bottom: 20px; }
+        .smr-results li { margin-bottom: 8px; font-size: 15px; }
+    </style>
 </head>
 <body>
 
@@ -14,6 +32,7 @@
         <nav>
             <a href="#home" class="active">Home</a>
             <a href="#services">Services</a>
+            <a href="#smr-app">SMR Configurator</a>
             <a href="#about">About</a>
             <a href="#contact">Contact</a>
             <!-- New governance workspace application pathway link -->
@@ -56,6 +75,62 @@
         </div>
     </section>
 
+    <!-- INTEGRATED SMR CONFIGURATOR APP SECTION -->
+    <section id="smr-app" class="smr-section">
+        <div class="smr-container">
+            <h2>BWRX-300 SMR Adaptation Engine</h2>
+            <p style="color: #ccc; margin-bottom: 25px;">Input your localization constraints below. The multi-agent AI system will evaluate thermal data, backward-calculate timelines, and compile structural requirements against baseline thresholds.</p>
+            
+            <form id="evaluationForm">
+                <div class="form-grid">
+                    <div class="smr-group">
+                        <label for="customer_id">Customer / Joint Venture ID</label>
+                        <input type="text" id="customer_id" value="EuroPower-JV" required>
+                    </div>
+                    <div class="smr-group">
+                        <label for="country_code">Target Region (Country Code)</label>
+                        <input type="text" id="country_code" value="UK" required>
+                    </div>
+                    <div class="smr-group">
+                        <label for="seismic_pga">Seismic Demand Threshold (g)</label>
+                        <input type="number" step="0.01" id="seismic_pga" value="0.35" required>
+                    </div>
+                    <div class="smr-group">
+                        <label for="ambient_temp">Peak Ambient Temperature (°C)</label>
+                        <input type="number" step="0.1" id="ambient_temp" value="33.5" required>
+                    </div>
+                    <div class="smr-group">
+                        <label for="grid_frequency_hz">Grid System Frequency</label>
+                        <select id="grid_frequency_hz">
+                            <option value="50">50 Hz (Europe / UK)</option>
+                            <option value="60">60 Hz (US / Americas)</option>
+                        </select>
+                    </div>
+                    <div class="smr-group">
+                        <label for="regulatory_body">Local Nuclear Regulatory Body</label>
+                        <input type="text" id="regulatory_body" value="Office for Nuclear Regulation (ONR)" required>
+                    </div>
+                </div>
+                <button type="submit" class="smr-btn">Execute Engineering AI Analysis</button>
+            </form>
+
+            <div class="smr-results" id="resultsBlock">
+                <h3>AI Engineering Report Summary</h3>
+                <p style="margin-bottom: 15px;"><strong>Optimized Net Capacity:</strong> <span id="outNet" style="color: #00d2ff; font-weight: bold;"></span> MWe</p>
+                <p style="margin-bottom: 25px;"><strong>Overnight Capital Cost Projection:</strong> $<span id="outCost" style="color: #00d2ff; font-weight: bold;"></span> Billion USD</p>
+                
+                <h4 style="color: #fff; margin-bottom: 8px;">Identified Site Adaptations</h4>
+                <ul id="outAdaptations" style="color: #e0e0e0;"></ul>
+
+                <h4 style="color: #fff; margin-bottom: 8px;">Backward-Calculated Project Deadlines</h4>
+                <ul id="outMilestones" style="color: #e0e0e0;"></ul>
+
+                <h4 style="color: #fff; margin-bottom: 8px;">Project Responsibility Framework (RACI)</h4>
+                <div id="outMatrix" style="color: #e0e0e0;"></div>
+            </div>
+        </div>
+    </section>
+
     <!-- Core Philosophy Section -->
     <section id="about" class="about-section">
         <div class="about-container">
@@ -71,7 +146,7 @@
             <p class="section-subtitle">Let's discuss how to accelerate your industrial digital transformation.</p>
 
             <!-- FIXED ACTION URL PIPELINE PATH -->
-                      <!-- Form points natively back to your Flask submit route -->
+            <!-- Form points natively back to your Flask submit route -->
             <form action="/submit-inquiry" method="POST" class="inquiry-form">
 
                 <div class="form-group">
@@ -100,5 +175,88 @@
         <p>&copy; 2026 NEXT-GEN4INDUSTRY. All rights reserved.</p>
     </footer>
 
-</body>
-</html>
+document.getElementById('evaluationForm').addEventListener('submit', async (e) => {
+e.preventDefault();
+// Build json structure payload dynamically
+const payload = {
+customer_id: document.getElementById('customer_id').value,
+country_code: document.getElementById('country_code').value,
+seismic_pga: parseFloat(document.getElementById('seismic_pga').value),
+ambient_temp: parseFloat(document.getElementById('ambient_temp').value),
+grid_frequency_hz: parseInt(document.getElementById('grid_frequency_hz').value),
+regulatory_body: document.getElementById('regulatory_body').value
+};
+try {
+    // Replace http://localhost:8081/api/evaluate with your live Render Web Service URL
+const response = await fetch('https://onrender.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+});
+
+// Route this to your Go application service port
+const response = await fetch('http://localhost:8081/api/evaluate', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(payload)
+});
+if (!response.ok) throw new Error('API server returned error configuration status');
+const data = await response.json();
+// Dynamic UI binding variables
+document.getElementById('outNet').innerText = data.optimized_net_output_mwe.toFixed(2);
+document.getElementById('outCost').innerText = data.overnight_cost_usd_billion.toFixed(2);
+const adaptList = document.getElementById('outAdaptations');
+adaptList.innerHTML = '';
+data.engineering_adaptations.forEach(m => {
+adaptList.innerHTML += '' + m + '';
+});
+const milestoneList = document.getElementById('outMilestones');
+milestoneList.innerHTML = '';
+data.milestone_deadlines.forEach(m => {
+const dateStr = new Date(m.TargetDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+milestoneList.innerHTML += '' + m.PhaseName + ': ' + dateStr + '';
+});
+const matrixDiv = document.getElementById('outMatrix');
+matrixDiv.innerHTML = '';
+for (const [scope, owner] of Object.entries(data.responsibility_matrix)) {
+matrixDiv.innerHTML += '' + scope + ' → Lead Owner: ' + owner + '';
+}
+// Show hidden element reports panel block smooth reveal
+document.getElementById('resultsBlock').style.display = 'block';
+document.getElementById('resultsBlock').scrollIntoView({ behavior: 'smooth' });
+} catch (error) {
+alert('Could not sync with the background Go SMR Engine. Please verify that your Go application is running on port 8081.');
+console.error(error);
+}
+});
+<!-- SYSTEM GOVERNANCE RUNBOOK DISPLAY SECTION -->
+<section id="runbook-viewer" style="padding: 60px 20px; background: #1e1e24; color: #f5f5f5;">
+    <div style="max-width: 900px; margin: 0 auto; background: #2a2a35; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
+        <h2 style="color: #00d2ff; margin-top: 0; border-bottom: 2px solid #3a3a4a; padding-bottom: 10px;">Live Architecture Runbook Viewer</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">Fetching operational specs and tracking dependency contracts dynamically from the cloud Go application repository.</p>
+        
+        <!-- Live Markdown Output Layout Pre-Container -->
+        <pre id="runbookContent" style="background: #1a1a22; padding: 25px; border-radius: 6px; border-left: 5px solid #3182ce; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; overflow-x: auto; white-space: pre-wrap; font-size: 14px; line-height: 1.6;">Loading dynamic specification logs...</pre>
+    </div>
+</section>
+
+<script>
+    // Automatically query the Go engine gateway when the website renders
+    document.addEventListener("DOMContentLoaded", async () => {
+        const container = document.getElementById("runbookContent");
+        try {
+            // Replace with your live Render app URL once pushed to production
+            const endpoint = "https://onrender.com";
+            const response = await fetch(endpoint);
+            
+            if (!response.ok) throw new Error("Target file resource missing.");
+            const markdownText = await response.text();
+            
+            // Map text payload parameters directly into web layout view blocks
+            container.textContent = markdownText;
+        } catch (error) {
+            container.textContent = "Unable to fetch project runbook data. Ensure the Go service is active and accessible.";
+            console.error("Runbook Fetch Anomaly:", error);
+        }
+    });
+</script>
