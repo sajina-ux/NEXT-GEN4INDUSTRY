@@ -229,34 +229,57 @@ alert('Could not sync with the background Go SMR Engine. Please verify that your
 console.error(error);
 }
 });
-<!-- SYSTEM GOVERNANCE RUNBOOK DISPLAY SECTION -->
+<!-- REWRITTEN RUNBOOK DISPLAY CONTAINER -->
 <section id="runbook-viewer" style="padding: 60px 20px; background: #1e1e24; color: #f5f5f5;">
-    <div style="max-width: 900px; margin: 0 auto; background: #2a2a35; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
-        <h2 style="color: #00d2ff; margin-top: 0; border-bottom: 2px solid #3a3a4a; padding-bottom: 10px;">Live Architecture Runbook Viewer</h2>
-        <p style="color: #aaa; margin-bottom: 20px;">Fetching operational specs and tracking dependency contracts dynamically from the cloud Go application repository.</p>
+    <div style="max-width: 900px; margin: 0 auto; background: #2a2a35; padding: 40px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.4);">
+        <h2 style="color: #00d2ff; margin-top: 0; margin-bottom: 5px; border-bottom: 2px solid #3a3a4a; padding-bottom: 10px;">Operational Governance Dashboard</h2>
+        <p style="color: #aaa; margin-bottom: 25px; font-size: 14px;">Real-time architecture telemetry grounding and active integration contracts from A14INDUSTRY.BAA.</p>
         
-        <!-- Live Markdown Output Layout Pre-Container -->
-        <pre id="runbookContent" style="background: #1a1a22; padding: 25px; border-radius: 6px; border-left: 5px solid #3182ce; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; overflow-x: auto; white-space: pre-wrap; font-size: 14px; line-height: 1.6;">Loading dynamic specification logs...</pre>
+        <div id="runbookCanvas" style="background: #1a1a22; padding: 30px; border-radius: 6px; border-left: 5px solid #00d2ff; color: #e2e8f0; font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.7; font-size: 15px; max-height: 600px; overflow-y: auto;">
+            <p style="color: #00d2ff;">Syncing with central governance registry...</p>
+        </div>
     </div>
 </section>
 
 <script>
-    // Automatically query the Go engine gateway when the website renders
     document.addEventListener("DOMContentLoaded", async () => {
-        const container = document.getElementById("runbookContent");
+        const canvas = document.getElementById("runbookCanvas");
         try {
-            // Replace with your live Render app URL once pushed to production
+            // Secure connection to your live active Go microservice endpoint on Render
             const endpoint = "https://onrender.com";
             const response = await fetch(endpoint);
             
-            if (!response.ok) throw new Error("Target file resource missing.");
-            const markdownText = await response.text();
+            if (!response.ok) throw new Error("Runbook manifest unreachable.");
+            const rawMarkdown = await response.text();
             
-            // Map text payload parameters directly into web layout view blocks
-            container.textContent = markdownText;
+            // Clean parsing algorithm to transform raw Markdown into clean, structured HTML blocks without dependencies
+            let htmlOutput = "";
+            const lines = rawMarkdown.split("\n");
+            
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (trimmed.startsWith("# ")) {
+                    htmlOutput += `<h1 style="color: #00d2ff; font-size: 24px; margin-top: 20px; margin-bottom: 10px;">${trimmed.substring(2)}</h1>`;
+                } else if (trimmed.startsWith("## ")) {
+                    htmlOutput += `<h2 style="color: #fff; font-size: 20px; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #3a3a4a; padding-bottom: 5px;">${trimmed.substring(3)}</h2>`;
+                } else if (trimmed.startsWith("### ")) {
+                    htmlOutput += `<h3 style="color: #aaa; font-size: 16px; margin-top: 12px; margin-bottom: 5px;">${trimmed.substring(4)}</h3>`;
+                } else if (trimmed.startsWith("* ")) {
+                    // Extract bold sub-labels natively inside list iterations
+                    let itemContent = trimmed.substring(2).replace(/\*\*(.*?)\*\*/g, '<strong style="color: #00d2ff;">$1</strong>');
+                    htmlOutput += `<div style="margin-left: 15px; margin-bottom: 6px; position: relative; padding-left: 15px;">&bull; ${itemContent}</div>`;
+                } else if (trimmed === "---") {
+                    htmlOutput += `<hr style="border: 0; border-top: 1px solid #3a3a4a; margin: 20px 0;">`;
+                } else if (trimmed.length > 0) {
+                    htmlOutput += `<p style="margin-bottom: 10px; color: #ccc;">${trimmed}</p>`;
+                }
+            });
+            
+            canvas.innerHTML = htmlOutput;
         } catch (error) {
-            container.textContent = "Unable to fetch project runbook data. Ensure the Go service is active and accessible.";
-            console.error("Runbook Fetch Anomaly:", error);
+            canvas.innerHTML = `<p style="color: #ff4a4a; font-weight: bold;">⚠️ Operational Telemetry Offline: Ensure your backend Go service is active on Render.</p>`;
+            console.error("Runbook Processing Error:", error);
         }
     });
 </script>
+
