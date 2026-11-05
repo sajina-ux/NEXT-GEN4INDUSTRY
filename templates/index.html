@@ -174,61 +174,62 @@
     <footer>
         <p>&copy; 2026 NEXT-GEN4INDUSTRY. All rights reserved.</p>
     </footer>
+        document.getElementById('evaluationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const payload = {
+                customer_id: document.getElementById('customer_id').value,
+                country_code: document.getElementById('country_code').value,
+                seismic_pga: parseFloat(document.getElementById('seismic_pga').value),
+                ambient_temp: parseFloat(document.getElementById('ambient_temp').value),
+                grid_frequency_hz: parseInt(document.getElementById('grid_frequency_hz').value),
+                regulatory_body: document.getElementById('regulatory_body').value
+            };
 
-document.getElementById('evaluationForm').addEventListener('submit', async (e) => {
-e.preventDefault();
-// Build json structure payload dynamically
-const payload = {
-customer_id: document.getElementById('customer_id').value,
-country_code: document.getElementById('country_code').value,
-seismic_pga: parseFloat(document.getElementById('seismic_pga').value),
-ambient_temp: parseFloat(document.getElementById('ambient_temp').value),
-grid_frequency_hz: parseInt(document.getElementById('grid_frequency_hz').value),
-regulatory_body: document.getElementById('regulatory_body').value
-};
-try {
-    // Replace http://localhost:8081/api/evaluate with your live Render Web Service URL
-const response = await fetch('https://onrender.com', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-});
+            try {
+                // FIXED: Using exactly one response definition pointing directly to your live cloud Go engine url
+                const response = await fetch('https://onrender.com', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-// Route this to your Go application service port
-const response = await fetch('http://localhost:8081/api/evaluate', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify(payload)
-});
-if (!response.ok) throw new Error('API server returned error configuration status');
-const data = await response.json();
-// Dynamic UI binding variables
-document.getElementById('outNet').innerText = data.optimized_net_output_mwe.toFixed(2);
-document.getElementById('outCost').innerText = data.overnight_cost_usd_billion.toFixed(2);
-const adaptList = document.getElementById('outAdaptations');
-adaptList.innerHTML = '';
-data.engineering_adaptations.forEach(m => {
-adaptList.innerHTML += '' + m + '';
-});
-const milestoneList = document.getElementById('outMilestones');
-milestoneList.innerHTML = '';
-data.milestone_deadlines.forEach(m => {
-const dateStr = new Date(m.TargetDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-milestoneList.innerHTML += '' + m.PhaseName + ': ' + dateStr + '';
-});
-const matrixDiv = document.getElementById('outMatrix');
-matrixDiv.innerHTML = '';
-for (const [scope, owner] of Object.entries(data.responsibility_matrix)) {
-matrixDiv.innerHTML += '' + scope + ' → Lead Owner: ' + owner + '';
-}
-// Show hidden element reports panel block smooth reveal
-document.getElementById('resultsBlock').style.display = 'block';
-document.getElementById('resultsBlock').scrollIntoView({ behavior: 'smooth' });
-} catch (error) {
-alert('Could not sync with the background Go SMR Engine. Please verify that your Go application is running on port 8081.');
-console.error(error);
-}
-});
+                if (!response.ok) throw new Error('API server returned error configuration status');
+                const data = await response.json();
+
+                // Dynamic UI binding variables
+                document.getElementById('outNet').innerText = data.optimized_net_output_mwe.toFixed(2);
+                document.getElementById('outCost').innerText = data.overnight_cost_usd_billion.toFixed(2);
+                
+                const adaptList = document.getElementById('outAdaptations');
+                adaptList.innerHTML = '';
+                data.engineering_adaptations.forEach(m => {
+                    adaptList.innerHTML += '<li>' + m + '</li>';
+                });
+
+                const milestoneList = document.getElementById('outMilestones');
+                milestoneList.innerHTML = '';
+                data.milestone_deadlines.forEach(m => {
+                    const dateStr = new Date(m.TargetDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                    milestoneList.innerHTML += '<li><strong>' + m.PhaseName + '</strong>: ' + dateStr + '</li>';
+                });
+
+                const matrixDiv = document.getElementById('outMatrix');
+                matrixDiv.innerHTML = '';
+                for (const [scope, owner] of Object.entries(data.responsibility_matrix)) {
+                    matrixDiv.innerHTML += '<div class="matrix-item"><strong>' + scope + '</strong> &rarr; Lead Owner: ' + owner + '</div>';
+                }
+
+                // Show hidden element reports panel block smooth reveal
+                document.getElementById('resultsBlock').style.display = 'block';
+                document.getElementById('resultsBlock').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                alert('Could not sync with the background Go SMR Engine. Please verify your Render deployment status logs.');
+                console.error(error);
+            }
+        });
+
 <!-- INTEGRATED LIVE GOVERNANCE APP PREVIEW CONTAINER -->
 <section id="governance-app-preview" style="padding: 60px 20px; background: #15151c; text-align: center;">
     <div style="max-width: 1150px; margin: 0 auto; background: #222230; padding: 30px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); text-align: left;">
