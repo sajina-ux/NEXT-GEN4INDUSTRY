@@ -172,11 +172,13 @@
 
     <!-- Footer Section -->
     <footer>
-        <p>&copy; 2026 NEXT-GEN4INDUSTRY. All rights reserved.</p>
+        <p>&copy; 2026 NEXT-GEN4INDUSTRY | Powered by AI4INDUSTRY.BAA Architecture. All rights reserved.</p>
     </footer>
+
+    <!-- FIXED: Added missing opening <script> tag for SMR Configurator -->
+    <script>
         document.getElementById('evaluationForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const payload = {
                 customer_id: document.getElementById('customer_id').value,
                 country_code: document.getElementById('country_code').value,
@@ -185,124 +187,131 @@
                 grid_frequency_hz: parseInt(document.getElementById('grid_frequency_hz').value),
                 regulatory_body: document.getElementById('regulatory_body').value
             };
-
             try {
-                // FIXED: Using exactly one response definition pointing directly to your live cloud Go engine url
                 const response = await fetch('https://onrender.com', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
-                if (!response.ok) throw new Error('API server returned error configuration status');
+                if (!response.ok) throw new Error('API server returned error status');
                 const data = await response.json();
-
-                // Dynamic UI binding variables
                 document.getElementById('outNet').innerText = data.optimized_net_output_mwe.toFixed(2);
                 document.getElementById('outCost').innerText = data.overnight_cost_usd_billion.toFixed(2);
-                
-                const adaptList = document.getElementById('outAdaptations');
-                adaptList.innerHTML = '';
-                data.engineering_adaptations.forEach(m => {
-                    adaptList.innerHTML += '<li>' + m + '</li>';
-                });
-
-                const milestoneList = document.getElementById('outMilestones');
-                milestoneList.innerHTML = '';
-                data.milestone_deadlines.forEach(m => {
-                    const dateStr = new Date(m.TargetDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-                    milestoneList.innerHTML += '<li><strong>' + m.PhaseName + '</strong>: ' + dateStr + '</li>';
-                });
-
-                const matrixDiv = document.getElementById('outMatrix');
-                matrixDiv.innerHTML = '';
-                for (const [scope, owner] of Object.entries(data.responsibility_matrix)) {
-                    matrixDiv.innerHTML += '<div class="matrix-item"><strong>' + scope + '</strong> &rarr; Lead Owner: ' + owner + '</div>';
-                }
-
-                // Show hidden element reports panel block smooth reveal
                 document.getElementById('resultsBlock').style.display = 'block';
-                document.getElementById('resultsBlock').scrollIntoView({ behavior: 'smooth' });
-
             } catch (error) {
-                alert('Could not sync with the background Go SMR Engine. Please verify your Render deployment status logs.');
-                console.error(error);
+                alert('Could not sync with the background Go SMR Engine. Verify your Render deployment.');
             }
         });
+    </script>
 
-<!-- INTEGRATED LIVE GOVERNANCE APP PREVIEW CONTAINER -->
-<section id="governance-app-preview" style="padding: 60px 20px; background: #15151c; text-align: center;">
-    <div style="max-width: 1150px; margin: 0 auto; background: #222230; padding: 30px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); text-align: left;">
-        <h2 style="color: #00d2ff; margin-top: 0; margin-bottom: 10px; border-bottom: 2px solid #2d2d3f; padding-bottom: 12px; font-family: 'Segoe UI', sans-serif;">
-            AI4INDUSTRY.BAA Enterprise Governance Console
-        </h2>
-        <p style="color: #aaa; margin-bottom: 25px; font-size: 15px;">
-            Active viewport monitoring real-time user adoption intensity, project financial impact parameters, and live system deployment runbooks.
-        </p>
-        
-        <!-- Live App Iframe Container Wrapper Frame -->
-        <div style="width: 100%; border-radius: 6px; overflow: hidden; border: 1px solid #2d2d3f; background: #1a1a24; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);">
-            <iframe 
-                src="http://localhost:8083" 
-                title="AI4INDUSTRY.BAA Agentic Governance App"
-                style="width: 100%; height: 750px; border: none; display: block;"
-                scrolling="auto">
-            </iframe>
+    <!-- INTEGRATED AI4INDUSTRY.BAA LIVE EDGE & RAG CONSOLE (REPLACES BROKEN LOCALHOST IFRAME) -->
+    <section id="ai4industry-baa-console" style="padding: 60px 20px; background: #15151c; color: #f5f5f5; font-family: 'Segoe UI', sans-serif;">
+        <div style="max-width: 1100px; margin: 0 auto; background: #222230; padding: 35px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 1px solid #2d2d3f;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2d2d3f; padding-bottom: 15px; margin-bottom: 25px; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <h2 style="color: #00d2ff; margin: 0;">AI4INDUSTRY.BAA — Live Edge AI & Digital Twin Console</h2>
+                    <p style="color: #aaa; margin: 5px 0 0 0; font-size: 14px;">Real-time OT/Edge Anomaly Detection, Asset Knowledge Graph & OEM Manual RAG Co-Pilot</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <select id="baaMachineSelect" onchange="pollBaaTelemetry()" style="padding: 8px 12px; background: #1a1a24; color: #00d2ff; border: 1px solid #4a4a5a; border-radius: 6px; font-weight: bold;">
+                        <option value="CNC-MILL-01">CNC-MILL-01 (5-Axis Spindle)</option>
+                        <option value="ROBOT-ARM-02">ROBOT-ARM-02 (Welding Cell)</option>
+                        <option value="HYDRAULIC-PRESS-03">HYDRAULIC-PRESS-03 (Stamping)</option>
+                    </select>
+                    <span id="baaStatusBadge" style="padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #1e3a2f; color: #4ade80;">SYNCING...</span>
+                </div>
+            </div>
+
+            <!-- Live Telemetry Metrics Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                <div style="background: #1a1a24; padding: 18px; border-radius: 8px; border: 1px solid #2d2d3f;">
+                    <div style="color: #888; font-size: 12px; text-transform: uppercase;">Spindle / Core Temp</div>
+                    <div id="baaTemp" style="font-size: 24px; font-weight: bold; color: #00d2ff; margin-top: 5px;">-- °C</div>
+                </div>
+                <div style="background: #1a1a24; padding: 18px; border-radius: 8px; border: 1px solid #2d2d3f;">
+                    <div style="color: #888; font-size: 12px; text-transform: uppercase;">Vibration RMS</div>
+                    <div id="baaVib" style="font-size: 24px; font-weight: bold; color: #00d2ff; margin-top: 5px;">-- mm/s</div>
+                </div>
+                <div style="background: #1a1a24; padding: 18px; border-radius: 8px; border: 1px solid #2d2d3f;">
+                    <div style="color: #888; font-size: 12px; text-transform: uppercase;">Operating Speed</div>
+                    <div id="baaRpm" style="font-size: 24px; font-weight: bold; color: #fff; margin-top: 5px;">-- RPM</div>
+                </div>
+                <div style="background: #1a1a24; padding: 18px; border-radius: 8px; border: 1px solid #2d2d3f;">
+                    <div style="color: #888; font-size: 12px; text-transform: uppercase;">Edge Timestamp</div>
+                    <div id="baaTime" style="font-size: 24px; font-weight: bold; color: #ccc; margin-top: 5px;">--:--:--</div>
+                </div>
+            </div>
+
+            <!-- Live Knowledge Graph Diagnosis Banner -->
+            <div id="baaDiagBox" style="background: #1a1a24; padding: 16px 20px; border-radius: 8px; border-left: 4px solid #00d2ff; margin-bottom: 30px; font-size: 14px; color: #e2e8f0;">
+                Initializing Edge AI inference stream...
+            </div>
+
+            <!-- Embedded OEM Manual RAG Co-Pilot -->
+            <div style="background: #1a1a24; padding: 25px; border-radius: 8px; border: 1px solid #2d2d3f;">
+                <h3 style="color: #00d2ff; margin-top: 0; margin-bottom: 8px; font-size: 18px;">🤖 OEM Maintenance RAG Co-Pilot</h3>
+                <p style="color: #999; font-size: 13px; margin-bottom: 15px;">Query grounded machine SOPs (e.g., <em>"What is the SOP when temperature exceeds 75C?"</em> or <em>"Bearing vibration inspection"</em>)</p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input type="text" id="baaCopilotInput" placeholder="Enter maintenance symptom or SOP question..." style="flex: 1; min-width: 250px; padding: 12px; background: #13131a; border: 1px solid #4a4a5a; border-radius: 6px; color: #fff; font-size: 14px;">
+                    <button type="button" onclick="queryBaaCopilot()" style="padding: 12px 24px; background: #00d2ff; color: #15151c; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Ask Co-Pilot</button>
+                </div>
+                <div id="baaCopilotOutput" style="display: none; margin-top: 15px; padding: 15px; background: #13131a; border-left: 4px solid #4ade80; border-radius: 6px; font-size: 14px; color: #e2e8f0;"></div>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- REWRITTEN RUNBOOK DISPLAY CONTAINER -->
-<section id="runbook-viewer" style="padding: 60px 20px; background: #1e1e24; color: #f5f5f5;">
-    <div style="max-width: 900px; margin: 0 auto; background: #2a2a35; padding: 40px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.4);">
-        <h2 style="color: #00d2ff; margin-top: 0; margin-bottom: 5px; border-bottom: 2px solid #3a3a4a; padding-bottom: 10px;">Operational Governance Dashboard</h2>
-        <p style="color: #aaa; margin-bottom: 25px; font-size: 14px;">Real-time architecture telemetry grounding and active integration contracts from A14INDUSTRY.BAA.</p>
-        
-        <div id="runbookCanvas" style="background: #1a1a22; padding: 30px; border-radius: 6px; border-left: 5px solid #00d2ff; color: #e2e8f0; font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.7; font-size: 15px; max-height: 600px; overflow-y: auto;">
-            <p style="color: #00d2ff;">Syncing with central governance registry...</p>
-        </div>
-    </div>
-</section>
+    <script>
+        async function pollBaaTelemetry() {
+            const machineId = document.getElementById('baaMachineSelect').value;
+            try {
+                const res = await fetch(`/api/ai4industry/telemetry/${machineId}`);
+                const data = await res.json();
+                document.getElementById('baaTemp').innerText = data.temperature_c + ' °C';
+                document.getElementById('baaVib').innerText = data.vibration_mms + ' mm/s';
+                document.getElementById('baaRpm').innerText = data.rpm + ' RPM';
+                document.getElementById('baaTime').innerText = data.timestamp;
+                document.getElementById('baaDiagBox').innerText = data.ai_diagnosis;
 
-<script>
-    document.addEventListener("DOMContentLoaded", async () => {
-        const canvas = document.getElementById("runbookCanvas");
-        try {
-            // Secure connection to your live active Go microservice endpoint on Render
-            const endpoint = "https://onrender.com";
-            const response = await fetch(endpoint);
-            
-            if (!response.ok) throw new Error("Runbook manifest unreachable.");
-            const rawMarkdown = await response.text();
-            
-            // Clean parsing algorithm to transform raw Markdown into clean, structured HTML blocks without dependencies
-            let htmlOutput = "";
-            const lines = rawMarkdown.split("\n");
-            
-            lines.forEach(line => {
-                let trimmed = line.trim();
-                if (trimmed.startsWith("# ")) {
-                    htmlOutput += `<h1 style="color: #00d2ff; font-size: 24px; margin-top: 20px; margin-bottom: 10px;">${trimmed.substring(2)}</h1>`;
-                } else if (trimmed.startsWith("## ")) {
-                    htmlOutput += `<h2 style="color: #fff; font-size: 20px; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #3a3a4a; padding-bottom: 5px;">${trimmed.substring(3)}</h2>`;
-                } else if (trimmed.startsWith("### ")) {
-                    htmlOutput += `<h3 style="color: #aaa; font-size: 16px; margin-top: 12px; margin-bottom: 5px;">${trimmed.substring(4)}</h3>`;
-                } else if (trimmed.startsWith("* ")) {
-                    // Extract bold sub-labels natively inside list iterations
-                    let itemContent = trimmed.substring(2).replace(/\*\*(.*?)\*\*/g, '<strong style="color: #00d2ff;">$1</strong>');
-                    htmlOutput += `<div style="margin-left: 15px; margin-bottom: 6px; position: relative; padding-left: 15px;">&bull; ${itemContent}</div>`;
-                } else if (trimmed === "---") {
-                    htmlOutput += `<hr style="border: 0; border-top: 1px solid #3a3a4a; margin: 20px 0;">`;
-                } else if (trimmed.length > 0) {
-                    htmlOutput += `<p style="margin-bottom: 10px; color: #ccc;">${trimmed}</p>`;
+                const badge = document.getElementById('baaStatusBadge');
+                const diagBox = document.getElementById('baaDiagBox');
+                if (data.status === 'CRITICAL') {
+                    badge.innerText = 'CRITICAL FAULT';
+                    badge.style.background = '#451a1a';
+                    badge.style.color = '#f87171';
+                    diagBox.style.borderLeftColor = '#f87171';
+                } else {
+                    badge.innerText = 'LIVE • HEALTHY';
+                    badge.style.background = '#1e3a2f';
+                    badge.style.color = '#4ade80';
+                    diagBox.style.borderLeftColor = '#00d2ff';
                 }
-            });
-            
-            canvas.innerHTML = htmlOutput;
-        } catch (error) {
-            canvas.innerHTML = `<p style="color: #ff4a4a; font-weight: bold;">⚠️ Operational Telemetry Offline: Ensure your backend Go service is active on Render.</p>`;
-            console.error("Runbook Processing Error:", error);
+            } catch (e) {
+                document.getElementById('baaStatusBadge').innerText = 'API OFFLINE';
+            }
         }
-    });
-</script>
+
+        async function queryBaaCopilot() {
+            const q = document.getElementById('baaCopilotInput').value.trim();
+            if (!q) return;
+            const out = document.getElementById('baaCopilotOutput');
+            out.style.display = 'block';
+            out.innerText = 'Searching Asset Knowledge Graph & OEM Manuals...';
+            try {
+                const res = await fetch('/api/ai4industry/copilot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question: q })
+                });
+                const data = await res.json();
+                out.innerHTML = `<strong style="color:#4ade80;">Grounded SOP Match:</strong> ${data.answer}`;
+            } catch (e) {
+                out.innerText = 'Error querying Co-Pilot endpoint.';
+            }
+        }
+
+        setInterval(pollBaaTelemetry, 2500);
+        pollBaaTelemetry();
+    </script>
+</body>
+</html>
 
